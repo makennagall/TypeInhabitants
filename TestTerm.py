@@ -33,45 +33,55 @@ def main():
     finalType = types.split(')')[-1]
     finalType = finalType.split('>')[1]
     finalType = finalType.replace("->(", '')
-    '''
-    if list(firstTerm)[-1] == finalType:
-        firstTerm = firstTerm[:-1]
-    '''
+    typeDict[finalType] = ['']
+
     print("starting Type: " + firstTerm)
     print("final type: " + finalType)
+    print("starting dictionary: ", end='')
     print(typeDict)
 #Check infinite:
     typeDict = genTerms(typeDict, varList)
+    print("Dictionary after terms generated: ", end='')
     print(typeDict)
     for type in typeDict:
         if checkInfinite(type, typeDict) == True:
             sys.exit("Infinite Term")
-#Function Call:
-    #outcomeSet = set()
-    #outcomeSet = evalTerm(firstTerm, typeDict, varList, outcomeSet, 0)
-    #print(outcomeSet)
-#def varifyTypes(typelist, varList):
+    finalList = substitute(typeDict, firstTerm, [''])
+    #guarantee unique values using set:
+    finalSet = set()
+    for term in finalList:
+        finalSet.add(term)
+    print("Number of inhabitants: ", end='')
+    print(len(finalSet))
+    print("List of inhabitants: ")
+    for term in finalSet:
+        print(term)
 
 def checkInfinite(term, typeDict):
     termOutcome = term[-1]
-    print("term outcome: " + termOutcome)
     for var in term[:-1]:
-        print(var)
         if var == termOutcome:
             #check to make sure the term isn't uninhabited:
             for variable in list(term):
-                print()
                 if not variable in typeDict:
                     print("Impossible to make any terms")
                     sys.exit("Uninhabited")
             return True
     else:
         return False
-
+def substitute(typeDict, startTerm, finalList):
+    for var in list(startTerm):
+        newList = []
+        if not var in typeDict:
+            return "error, missing term: " + var
+        for term in finalList:
+            for newTerm in typeDict[var]:
+                newList.append(term + newTerm)
+        finalList = newList
+    return finalList
 def genTerms(typeDict, varList):
     tryAgainList = []
     for var in varList:
-        print(var)
         if not var in typeDict:
             newList, newTermMade = genTermsHelper(typeDict, var, tryAgainList)
             if newTermMade == False:
@@ -96,14 +106,14 @@ def genTermsHelper(typeDict, var, tryAgainList):
                 for num in typeDict[type]:
                     for num2 in typeDict[type[:-1]]:
                         newList.append(str(num) + str(num2))
-                print(newList)
                 return newList, True
             if len(type[:-1]) > 1:
                 return tryAgainList, False
             else:
-                print("another unknown variable encountered: " + type[:-1])
                 tryAgainList.append(var)
                 return tryAgainList, False
+    #make sure it doesn't run infinitely:
+    tryAgainList.remove(var)
     return tryAgainList, False
 
 #Execute Main:
