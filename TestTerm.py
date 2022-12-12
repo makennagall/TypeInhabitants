@@ -40,7 +40,9 @@ def main():
     print("starting Type: " + firstTerm)
     print("final type: " + finalType)
     print(typeDict)
-#Check infinite and zero:
+#Check infinite:
+    typeDict = genTerms(typeDict, varList)
+    print(typeDict)
     for type in typeDict:
         if checkInfinite(type, typeDict) == True:
             sys.exit("Infinite Term")
@@ -76,6 +78,49 @@ def checkInfinite(term, typeDict):
             return True
     else:
         return False
+
+def genTerms(typeDict, varList):
+    for var in varList:
+        if not var in typeDict:
+            typeDict = genTermHelper(typeDict, [], var)
+
+
+def genTermHelper(typeDict, newTermList, var):
+    print(typeDict)
+    print(var)
+    for type in typeDict:
+        if var == type[-1]:
+            print("type: " + type)
+            for newTermVar in list(type[:-1]):
+                if not newTermVar in typeDict:
+                    print("calling genTermHelper to find " + newTermVar)
+                    typeDict = genTermHelper(typeDict, [], newTermVar)
+            if len(newTermList) == 0:
+                print(typeDict)
+                for num in typeDict[type]:
+                    print("appending")
+                    newTermList.append(num)
+                print(newTermList)
+            else:
+                for string in newTermList:
+                    updatedList = []
+                    for string in newTermList:
+                        print("typeDict[type]: " + typeDict[type])
+                        for num in typeDict[type]:
+                            newString = string + str(num)
+                            updateList.append(newString)
+                newTermList = updateList
+            if len(type[:-1]) == 0:
+                print("base case")
+                if len(newTermList) != 0:
+                    typeDict[var] = newTermList
+                    return typeDict
+                return typeDict
+    return typeDict
+
+
+
+
 #Execute Main:
 if __name__ == '__main__':
     main()

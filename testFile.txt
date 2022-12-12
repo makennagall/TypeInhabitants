@@ -1,0 +1,8 @@
+"VX.VY.(X->X->X)->(Y)->X"
+"VX.VY.(X->X->Y)->Y"
+"VX.VY.(X->X->Y)->(X)->Y"
+"VX.VY.(X->X->Y)->(X)->(X)->Y"
+"VX.(X->X->X)->(X)->X"
+"VX.VY.VZ.(X->X->Z)->(Y->X)->(Y)->Z"
+"VX.VY.VZ.(X->X->X)->(Y->X)->(Y)->X"
+"VX.VY.VZ.(X->X->Q)->(R->X)->(Y->R)->(Y)->(Y)->Q"
