@@ -43,7 +43,9 @@ def main():
                     print(term)
             else:
                 print(finalList)
-            print()
+        else:
+            print("Infinite Term")
+        print()
 def parseType(testType):
         parenSplit = testType.split("(")
         vars = parenSplit[0]
@@ -119,16 +121,17 @@ def genTermsHelper(typeDict, var, tryAgainList):
     newList = []
     for type in typeDict:
         if type[-1] == var:
-            if type[:-1] in typeDict:
-                for num in typeDict[type]:
-                    for num2 in typeDict[type[:-1]]:
-                        newList.append(str(num) + str(num2))
-                return newList, True
-            if len(type[:-1]) > 1:
-                return tryAgainList, False
-            else:
-                tryAgainList.append(var)
-                return tryAgainList, False
+            if not var in type[:-1]:
+                if type[:-1] in typeDict:
+                    for num in typeDict[type]:
+                        for num2 in typeDict[type[:-1]]:
+                            newList.append(str(num) + str(num2))
+                    return newList, True
+                if len(type[:-1]) > 1:
+                    return tryAgainList, False
+                else:
+                    tryAgainList.append(var)
+                    return tryAgainList, False
     #make sure it doesn't run infinitely:
     if var in tryAgainList:
         tryAgainList.remove(var)
