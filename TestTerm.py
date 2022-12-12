@@ -52,17 +52,6 @@ def main():
     #print(outcomeSet)
 #def varifyTypes(typelist, varList):
 
-def evalTerm(currTerm, typeDict, varList, outcomeSet, startTerm):
-    for type in typeDict:
-        print(type)
-        print("typeDict[type]: " + ', '.join(typeDict[type]))
-        print(currTerm)
-        if typeDict[type] in currTerm:
-            newString = currTerm.replace(typeDict[type], str(type))
-            print("newString: " + newString)
-            outcomeSet.add(str(startTerm) + newString)
-    return outcomeSet
-
 def checkInfinite(term, typeDict):
     termOutcome = term[-1]
     print("term outcome: " + termOutcome)
@@ -80,46 +69,42 @@ def checkInfinite(term, typeDict):
         return False
 
 def genTerms(typeDict, varList):
+    tryAgainList = []
     for var in varList:
+        print(var)
         if not var in typeDict:
-            typeDict = genTermHelper(typeDict, [], var)
-
-
-def genTermHelper(typeDict, newTermList, var):
-    print(typeDict)
-    print(var)
-    for type in typeDict:
-        if var == type[-1]:
-            print("type: " + type)
-            for newTermVar in list(type[:-1]):
-                if not newTermVar in typeDict:
-                    print("calling genTermHelper to find " + newTermVar)
-                    typeDict = genTermHelper(typeDict, [], newTermVar)
-            if len(newTermList) == 0:
-                print(typeDict)
-                for num in typeDict[type]:
-                    print("appending")
-                    newTermList.append(num)
-                print(newTermList)
+            newList, newTermMade = genTermsHelper(typeDict, var, tryAgainList)
+            if newTermMade == False:
+                tryAgainList = newList
             else:
-                for string in newTermList:
-                    updatedList = []
-                    for string in newTermList:
-                        print("typeDict[type]: " + typeDict[type])
-                        for num in typeDict[type]:
-                            newString = string + str(num)
-                            updateList.append(newString)
-                newTermList = updateList
-            if len(type[:-1]) == 0:
-                print("base case")
-                if len(newTermList) != 0:
-                    typeDict[var] = newTermList
-                    return typeDict
-                return typeDict
+                typeDict[var] = newList
+
+    while tryAgainList != []:
+        for var in tryAgainList:
+            newList, newTermMade = genTermsHelper(typeDict, var, tryAgainList)
+            if newTermMade == False:
+                tryAgainList = newList
+            else:
+                typeDict[var] = newList
+                tryAgainList.remove(var)
     return typeDict
-
-
-
+def genTermsHelper(typeDict, var, tryAgainList):
+    newList = []
+    for type in typeDict:
+        if type[-1] == var:
+            if type[:-1] in typeDict:
+                for num in typeDict[type]:
+                    for num2 in typeDict[type[:-1]]:
+                        newList.append(str(num) + str(num2))
+                print(newList)
+                return newList, True
+            if len(type[:-1]) > 1:
+                return tryAgainList, False
+            else:
+                print("another unknown variable encountered: " + type[:-1])
+                tryAgainList.append(var)
+                return tryAgainList, False
+    return tryAgainList, False
 
 #Execute Main:
 if __name__ == '__main__':
