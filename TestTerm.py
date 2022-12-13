@@ -31,6 +31,7 @@ def main():
                 termIsInfinite = True
             if check == 'Uninhabited':
                 Uninhabited = True
+        #create list of terms that satisfy the type:
         if not Uninhabited:
             if not termIsInfinite:
                 finalList, nonZero = substitute(typeDict, firstTerm, [''])
@@ -104,6 +105,7 @@ def substitute(typeDict, startTerm, finalList):
         return returnString, False
     else:
         return finalList, True
+#genTerms uses genTermsHelper to add to typeDict so all variable values contain all possible ways to create that variable
 def genTerms(typeDict, varList):
     tryAgainList = []
     for var in varList:
