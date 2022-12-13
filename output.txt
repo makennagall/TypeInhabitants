@@ -1,0 +1,89 @@
+1: VX.VY.(X->X->X)->(Y)->X
+Lambda Term: VX.VY.\0:(X->X->X).\1:(Y).
+Uninhabited Type
+
+2: VX.VY.(X->X->Y)->Y
+Lambda Term: VX.VY.\0:(X->X->Y).
+Uninhabited Type
+
+3: VX.VY.(X->X->Y)->(X)->Y
+Lambda Term: VX.VY.\0:(X->X->Y).\1:(X).
+Number of inhabitants: 1
+List of inhabitants: 
+11
+
+4: VX.VY.(X->X->Y)->(X)->(X)->Y
+Lambda Term: VX.VY.\0:(X->X->Y).\1:(X).\2:(X).
+Number of inhabitants: 4
+List of inhabitants: 
+21
+22
+11
+12
+
+5: VX.(X->X->X)->(X)->X
+Lambda Term: VX.\0:(X->X->X).\1:(X).
+Infinite Type
+
+6: VX.VY.VZ.(X->X->Z)->(Y->X)->(Y)->Z
+Lambda Term: VX.VY.VZ.\0:(X->X->Z).\1:(Y->X).\2:(Y).
+Number of inhabitants: 1
+List of inhabitants: 
+1212
+
+7: VX.VY.VZ.(X->X->Z)->(Y->X)->(Y)->(X)->Z
+Lambda Term: VX.VY.VZ.\0:(X->X->Z).\1:(Y->X).\2:(Y).\3:(X).
+Number of inhabitants: 4
+List of inhabitants: 
+1212
+33
+312
+123
+
+8: VX.VY(X->X->X)->(Y->X)->(Y)->X
+Lambda Term: VX.VY.\0:(X->X->X).\1:(Y->X).\2:(Y).
+Infinite Type
+
+9: VX.VY.VZ.VR.(X->X->Z)->(R->X)->(Y->R)->(Y->R)->(Y)->Z
+Lambda Term: VX.VY.VZ.VR.\0:(X->X->Z).\1:(R->X).\2:(Y->R).\3:(Y->R).\4:(Y).
+Number of inhabitants: 4
+List of inhabitants: 
+124124
+134124
+124134
+134134
+
+10: VX.VY.VR.VQ.(X->X->Q)->(R->X)->(Y->R)->(Y)->(Y)->Q
+Lambda Term: VX.VY.VR.VQ.\0:(X->X->Q).\1:(R->X).\2:(Y->R).\3:(Y).\4:(Y).
+Number of inhabitants: 4
+List of inhabitants: 
+124124
+123124
+123123
+124123
+
+11: VX.VY.VR.VQ.(X->X->Q)->(R->X)->(Y->R)->(Y->R)->(Y)->(Y)->Q
+Lambda Term: VX.VY.VR.VQ.\0:(X->X->Q).\1:(R->X).\2:(Y->R).\3:(Y->R).\4:(Y).\5:(Y).
+Number of inhabitants: 16
+List of inhabitants: 
+124135
+124124
+124125
+125125
+135124
+135135
+124134
+134125
+135125
+134134
+134124
+135134
+125135
+125134
+134135
+125124
+
+12: VX.VY.VZ.(X->X->X)->(X)->Z
+Lambda Term: VX.VY.VZ.\0:(X->X->X).\1:(X).
+Uninhabited Type
+

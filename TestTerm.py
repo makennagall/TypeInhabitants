@@ -5,18 +5,21 @@ def main():
 #Term Parsing:
     testFileName = sys.argv[1]
     testFile = open(testFileName, "r")
+    outputFile = open("output.txt", "w")
     count = 1
     for line in testFile:
         line = line[:-2]
         line = line[1:]
         #parse term, evaluate term
         print(str(count) + ": " + line)
+        outputFile.write(str(count) + ": " + line + "\n")
         count += 1
         typeDict, varList, firstTerm, finalType = parseType(line)
         #print("starting Type: " + firstTerm)
         #print("final type: " + finalType)
         lambdaTerm = makeLambdaTerm(varList, typeDict)
         print("Lambda Term: " + lambdaTerm)
+        outputFile.write("Lambda Term: " + lambdaTerm + "\n")
     #Check infinite and Uninhabited:
         typeDict = genTerms(typeDict, varList)
         if not finalType in typeDict:
@@ -41,17 +44,24 @@ def main():
                     for term in finalList:
                         finalSet.add(term)
                     print("Number of inhabitants: ", end='')
+                    outputFile.write("Number of inhabitants: " + str(len(finalSet)) + "\n")
                     print(len(finalSet))
                     print("List of inhabitants: ")
+                    outputFile.write("List of inhabitants: " + "\n")
                     for term in finalSet:
                         print(term)
+                        outputFile.write(term + "\n")
                 else:
                     print(finalList)
+                    outputFile.write(finalList + "\n")
             else:
                 print("Infinite Type")
+                outputFile.write("Infinite Type"+ "\n")
         else:
             print("Uninhabited Type")
+            outputFile.write("Uninhabited Type"+ "\n")
         print()
+        outputFile.write("\n")
 def parseType(testType):
         parenSplit = testType.split("(")
         vars = parenSplit[0]
