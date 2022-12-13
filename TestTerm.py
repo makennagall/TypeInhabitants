@@ -2,49 +2,54 @@
 import sys
 
 def main():
-    #Note: Term must be wrapped in quotes, no spaces
-    #All types except for the final type must be wrapped in parentheses
-    #Final type should only be one term (no arrows)
-    #type variables cannot be numbers
-    #VX.VY.(T1)->(T2)->FT
 #Term Parsing:
     testFileName = sys.argv[1]
     testFile = open(testFileName, "r")
+    count = 1
     for line in testFile:
         line = line[:-2]
         line = line[1:]
         #parse term, evaluate term
-        print(line)
+        print(str(count) + ": " + line)
+        count += 1
         typeDict, varList, firstTerm, finalType = parseType(line)
         #print("starting Type: " + firstTerm)
         #print("final type: " + finalType)
         lambdaTerm = makeLambdaTerm(varList, typeDict)
-        print(lambdaTerm)
-    #Check infinite:
+        print("Lambda Term: " + lambdaTerm)
+    #Check infinite and Uninhabited:
         typeDict = genTerms(typeDict, varList)
         if not finalType in typeDict:
             typeDict[finalType] = ['']
-        print(typeDict)
         termIsInfinite = False
+        Uninhabited = False
+        if finalType != firstTerm[-1]:
+            Uninhabited = True
         for type in typeDict:
-            if checkInfinite(type, typeDict) == True:
+            check = checkInfinite(type, typeDict)
+            if check == True:
                 termIsInfinite = True
-        if not termIsInfinite:
-            finalList, nonZero = substitute(typeDict, firstTerm, [''])
-            #guarantee unique values using set:
-            if nonZero == True:
-                finalSet = set()
-                for term in finalList:
-                    finalSet.add(term)
-                print("Number of inhabitants: ", end='')
-                print(len(finalSet))
-                print("List of inhabitants: ")
-                for term in finalSet:
-                    print(term)
+            if check == 'Uninhabited':
+                Uninhabited = True
+        if not Uninhabited:
+            if not termIsInfinite:
+                finalList, nonZero = substitute(typeDict, firstTerm, [''])
+                #guarantee unique values using set:
+                if nonZero == True:
+                    finalSet = set()
+                    for term in finalList:
+                        finalSet.add(term)
+                    print("Number of inhabitants: ", end='')
+                    print(len(finalSet))
+                    print("List of inhabitants: ")
+                    for term in finalSet:
+                        print(term)
+                else:
+                    print(finalList)
             else:
-                print(finalList)
+                print("Infinite Type")
         else:
-            print("Infinite Term")
+            print("Uninhabited Type")
         print()
 def parseType(testType):
         parenSplit = testType.split("(")
@@ -74,12 +79,12 @@ def parseType(testType):
         return typeDict, varList, firstTerm, finalType
 def checkInfinite(term, typeDict):
     termOutcome = term[-1]
-    for var in term[:-1]:
+    for var in list(term[:-1]):
         if var == termOutcome:
             #check to make sure the term isn't uninhabited:
             for variable in list(term):
-                if not variable in typeDict:
-                    print("Uninhabited")
+                if typeDict[variable] == ['']:
+                    #print("Uninhabited")
                     return 'Uninhabited'
             return True
     else:
@@ -88,24 +93,26 @@ def substitute(typeDict, startTerm, finalList):
     for var in list(startTerm):
         newList = []
         if not var in typeDict:
-            returnString = "Uninhabited Term"
+            returnString = "Uninhabited Type"
             return returnString, False
         for term in finalList:
             for newTerm in typeDict[var]:
                 newList.append(str(term) + str(newTerm))
         finalList = newList
     if finalList == []:
-        returnString = "Uninhabited Term"
+        returnString = "Uninhabited Type"
         return returnString, False
     else:
         return finalList, True
 def genTerms(typeDict, varList):
     tryAgainList = []
     for var in varList:
-        if not var in typeDict:
-            newList, newTermMade = genTermsHelper(typeDict, var, tryAgainList)
-            if newTermMade == False:
-                tryAgainList = newList
+        newList, newTermMade = genTermsHelper(typeDict, var, tryAgainList)
+        if newTermMade == False:
+            tryAgainList = newList
+        else:
+            if var in typeDict:
+                typeDict[var] = typeDict[var] + newList
             else:
                 typeDict[var] = newList
     while tryAgainList != []:
@@ -114,7 +121,10 @@ def genTerms(typeDict, varList):
             if newTermMade == False:
                 tryAgainList = newList
             else:
-                typeDict[var] = newList
+                if var in typeDict:
+                    typeDict[var].append(newList)
+                else:
+                    typeDict[var] = newList
                 tryAgainList.remove(var)
     return typeDict
 def genTermsHelper(typeDict, var, tryAgainList):
@@ -127,11 +137,15 @@ def genTermsHelper(typeDict, var, tryAgainList):
                         for num2 in typeDict[type[:-1]]:
                             newList.append(str(num) + str(num2))
                     return newList, True
-                if len(type[:-1]) > 1:
-                    return tryAgainList, False
                 else:
-                    tryAgainList.append(var)
-                    return tryAgainList, False
+                    if len(type[:-1]) > 1:
+                        return tryAgainList, False
+                    elif len(type[:-1]) == 1:
+                        if not var in tryAgainList:
+                            tryAgainList.append(var)
+                        return tryAgainList, False
+                    else:
+                        return tryAgainList, False
     #make sure it doesn't run infinitely:
     if var in tryAgainList:
         tryAgainList.remove(var)
